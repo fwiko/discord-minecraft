@@ -1,5 +1,5 @@
 # discord-minecraft
-A discord.py extension allowing you to easily communicate with your Minecraft server's console through discord. 
+A discord.py extension allowing you to easily communicate with your Minecraft server's console through discord with no server-side dependencies. 
 
 
 ## Getting Started
