@@ -2,7 +2,6 @@ import discord
 
 from discord.ext import commands
 from discord.utils import get
-from discord.ext.commands import has_permissions
 from mcrcon import MCRcon, MCRconException
 
 
@@ -58,15 +57,14 @@ class discordMinecraft(commands.Cog):
             "allowed_roles": ['ExampleRole', 'Example Role', 'example role']
         }
 
+        
     @commands.command(
         name='console',
         description='Send commands to your minecraft console',
         aliases=['c'],
-        usage='!console <command> [values]'
-        )
+        usage='!console <command> [values]')
     @channel_check()
     @config_check()
-    @commands.has_permissions(administrator=True)
     async def minecraft_console(self, ctx, command: str, *, values=None):
         await ctx.message.channel.trigger_typing()
         try:
