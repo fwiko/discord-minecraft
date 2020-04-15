@@ -30,16 +30,16 @@ Once up an running and the above requirements are met. Follow these steps to get
 ```
 self.config = {
             # put the IP to your server here
-            "server_ip": "",
+            "server_ip": "192.168.0.1",
 
             # put the RCON port for your server here (this can be found/set in your server.properties file)
-            "rcon_port": 0,
+            "rcon_port": 8000,
 
             # put the RCON password for your server here (this can be found/set in your server.properties file)
-            "rcon_password": "",
+            "rcon_password": "supersecretpassword123",
 
             # put the ID of the channel you wish to send commands in here
-            "commands_channel_id": 0,
+            "commands_channel_id": 1234567890123456789,
 
             # put the names of all roles you wish to be able to execute commands here (capitalisation matters)
             "allowed_roles": ['ExampleRole', 'Example Role', 'example role']
