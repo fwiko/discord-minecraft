@@ -23,7 +23,7 @@ pip install mcrcon
 
 ## Setup
 
-Once up an running and the above requirements are met. Follow these steps to get the cog fully set up in your guild.
+Once up an running and the above requirements are met. Follow these steps to get the cog/extension fully set up in your guild.
 
 ### Setting up to work with your server
 
