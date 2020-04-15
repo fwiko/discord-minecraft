@@ -33,7 +33,6 @@ class discordMinecraft(commands.Cog):
 
     '''
     Simple extension allowing you to access your Minecraft server's console through a discord channel using the command [p]console
-    Before using [p]console use [p]mcsetup to set up the cog beforehand
     '''
 
     __author__ = "Raff"
