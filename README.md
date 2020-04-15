@@ -59,6 +59,7 @@ Once setup in your guild you will be able to communicate with your servers conso
 # Successfully Executed Commands
 
 ![github-small](https://raffsimms.com/files/Discord-0889.png)
+
 ![github-small](https://raffsimms.com/files/Discord-0890.png)
 
 # Command Execution Failed
