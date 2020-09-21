@@ -4,7 +4,6 @@ from discord.ext import commands
 from discord.utils import get
 from mcrcon import MCRcon, MCRconException
 
-
 def channel_check():
     async def checker(ctx):
         if ctx.message.channel.id == ctx.cog.config['commands_channel_id']:
@@ -15,11 +14,28 @@ def config_check():
     async def checker(ctx):
         async def roles_check(ctx):
             for role in ctx.cog.config['allowed_roles']:
-                check_role = get(ctx.guild.roles, name=role)
-                if check_role in ctx.author.roles:
-                    return True
+                if type(role) == str:
+                    try:
+                        check_role = get(ctx.guild.roles, name=role)
+                    except Exception:
+                        print(f"Discord-Minecraft > Role {role} does not exist.")
+                    else:
+                        if check_role in ctx.author.roles:
+                            return True
+                        else:
+                            continue
+                elif type(role) == int:
+                    try:
+                        check_role = get(ctx.guild.roles, id=role)
+                    except Exception:
+                        print(f"Discord-Minecraft > Role {role} does not exist.")
+                    else:
+                        if check_role in ctx.author.roles:
+                            return True
+                        else:
+                            continue
                 else:
-                    continue
+                    pass
         role_check = (await roles_check(ctx))
         if (role_check == True)\
             and ctx.cog.config["server_ip"] != None\
@@ -37,30 +53,30 @@ def parseReturned(returned):
 class discordMinecraft(commands.Cog):
 
     '''
-    Simple extension allowing you to access your Minecraft server's console through a discord channel using the command [p]console
+    Simple discord.py extension allowing you to access your Minecraft server's console through a discord channel using the command [p]console
     '''
 
     __author__ = "Raff"
-    __version__ = "1.0"
+    __version__ = "1.1.0"
 
 
     def __init__(self, bot):
         self.bot = bot
         self.config = {
             # put the IP to your server here
-            "server_ip": "play.bd-craft.com",
+            "server_ip": "0.0.0.0",
 
             # put the RCON port for your server here (this can be found/set in your server.properties file)
-            "rcon_port": 8084,
+            "rcon_port": 8000,
 
             # put the RCON password for your server here (this can be found/set in your server.properties file)
-            "rcon_password": "secret123",
+            "rcon_password": "supersecret123",
 
             # put the ID of the channel you wish to send commands in here
             "commands_channel_id": 686707809835941902,
 
             # put the names of all roles you wish to be able to execute commands here (capitalisation matters)
-            "allowed_roles": ['ExampleRole', 'Example Role', 'example role']
+            "allowed_roles": ['ExampleRole', 'Example Role', 'example role', 708133151653888112]
         }
 
         
@@ -84,7 +100,7 @@ class discordMinecraft(commands.Cog):
                     if returned != "":
                         returnembed.add_field(
                             name="Returned",
-                            value=f"```{returned}```"
+                            value=f"```{parseReturned(returned)}```"
                         )
                     else:
                         returnembed.add_field(
@@ -104,7 +120,7 @@ class discordMinecraft(commands.Cog):
                     if returned != "":
                         returnembed.add_field(
                             name="Returned",
-                            value=f"```{returned}```"
+                            value=f"```{parseReturned(returned)}```"
                         )
                     else:
                         returnembed.add_field(

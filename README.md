@@ -30,7 +30,7 @@ Once up an running and the above requirements are met. Follow these steps to get
 ```
 self.config = {
             # put the IP to your server here
-            "server_ip": "192.168.0.1",
+            "server_ip": "0.0.0.0",
 
             # put the RCON port for your server here (this can be found/set in your server.properties file)
             "rcon_port": 8000,
@@ -41,8 +41,8 @@ self.config = {
             # put the ID of the channel you wish to send commands in here
             "commands_channel_id": 1234567890123456789,
 
-            # put the names of all roles you wish to be able to execute commands here (capitalisation matters)
-            "allowed_roles": ['ExampleRole', 'Example Role', 'example role']
+            # put the names of all roles you wish to be able to execute commands here
+            "allowed_roles": ['ExampleRole', 'Example Role', 'example role', 708133151653888112]
         }
 ```
 Fill in all necessary information if the self.config dict within the extension.
@@ -59,8 +59,6 @@ Once setup in your guild you will be able to communicate with your servers conso
 # Successfully Executed Commands
 
 ![github-small](https://raffsimms.com/files/Discord-0889.png)
-
-![github-small](https://raffsimms.com/files/Discord-0890.png)
 
 # Command Execution Failed
 
