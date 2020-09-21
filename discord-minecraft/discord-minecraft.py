@@ -28,6 +28,12 @@ def config_check():
             return True
     return commands.check(checker)
 
+def parseReturned(returned):
+  for k, v in enumerate(returned):
+    if v == "§":
+      returned = returned.replace(returned[k+1], "")
+  return returned.replace("§", "")
+
 class discordMinecraft(commands.Cog):
 
     '''
