@@ -55,10 +55,8 @@ class discordMinecraft(commands.Cog):
     '''
     Simple discord.py extension allowing you to access your Minecraft server's console through a discord channel using the command [p]console
     '''
-
     __author__ = "Raff"
     __version__ = "1.1.0"
-
 
     def __init__(self, bot):
         self.bot = bot
