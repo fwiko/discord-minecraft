@@ -1,19 +1,30 @@
-import discord
+import discord, json, datetime
 
 from discord.ext import commands
 from discord.utils import get
 from mcrcon import MCRcon, MCRconException
 
+def load_config():
+    f = open('config.json', )
+    return json.load(f)
+
+def write_config(config):
+    with ('config.json', 'w') as file:
+        json.dump(config, file, indent=4)
+
+
 def channel_check():
     async def checker(ctx):
-        if ctx.message.channel.id == ctx.cog.config['commands_channel_id']:
+        config = load_config()
+        if ctx.message.channel.id == config['commands_channel_id']:
             return True
     return commands.check(checker)
 
 def config_check():
+    config = load_config()
     async def checker(ctx):
         async def roles_check(ctx):
-            for role in ctx.cog.config['allowed_roles']:
+            for role in config['allowed_roles']:
                 if type(role) == str:
                     try:
                         check_role = get(ctx.guild.roles, name=role)
@@ -38,9 +49,9 @@ def config_check():
                     pass
         role_check = (await roles_check(ctx))
         if (role_check == True)\
-            and ctx.cog.config["server_ip"] != None\
-                and ctx.cog.config["rcon_port"] != None\
-                    and ctx.cog.config["rcon_password"] != None:
+            and config["server_ip"] != None\
+                and config["rcon_port"] != None\
+                    and config["rcon_password"] != None:
             return True
     return commands.check(checker)
 
@@ -55,40 +66,90 @@ class discordMinecraft(commands.Cog):
     '''
     Simple discord.py extension allowing you to access your Minecraft server's console through a discord channel using the command [p]console
     '''
-    __author__ = "Raff"
-    __version__ = "1.1.0"
 
     def __init__(self, bot):
         self.bot = bot
-        self.config = {
-            # put the IP to your server here
-            "server_ip": "0.0.0.0",
-
-            # put the RCON port for your server here (this can be found/set in your server.properties file)
-            "rcon_port": 8000,
-
-            # put the RCON password for your server here (this can be found/set in your server.properties file)
-            "rcon_password": "supersecret123",
-
-            # put the ID of the channel you wish to send commands in here
-            "commands_channel_id": 686707809835941902,
-
-            # put the names of all roles you wish to be able to execute commands here (capitalisation matters)
-            "allowed_roles": ['ExampleRole', 'Example Role', 'example role', 708133151653888112]
-        }
-
+        self.author = "Raff Simms"
+        self.version = "1.2.0"
+        self.github = "https://github.com/fwiko/discord-minecraft"
         
-    @commands.command(
-        name='console',
-        description='Send commands to your minecraft console',
-        aliases=['c'],
-        usage='!console <command> [values]')
+    @commands.group()
+    async def dmc(self, ctx):
+        if ctx.invoked_subcommand is None:
+            await bot.say(f'{ctx.invoked_subcommand} is not a valid subcommand')
+
+    @dmc.command(name="serverip")
+    @config_check()
+    async def change_server_ip(self, ctx, serverip):
+        config = load_config()
+        config["server_ip"] = serverip
+        try:
+            write_config(config)
+        except Exception as e:
+            await ctx.send(f"Failed to change **Server IP**. ```{e}```")
+        else:
+            await ctx.send(f"Server IP changed to `{serverip}`")
+
+
+    @dmc.command(name="rconport")
+    @config_check()
+    async def change_rcon_port(self, ctx, rcon_port):
+        config = load_config()
+        config["rcon_port"] = rcon_port
+        try:
+            write_config(config)
+        except Exception as e:
+            await ctx.send(f"Failed to change **RCON port**. ```{e}```")
+        else:
+            await ctx.send(f"RCON port changed to `{rcon_port}`")
+
+    @dmc.command(name="rconpassword")
+    @config_check()
+    async def change_rcon_password(self, ctx, rcon_password):
+        config = load_config()
+        config["rcon_password"] = rcon_password
+        try:
+            write_config(config)
+        except Exception as e:
+            await ctx.send(f"Failed to change **RCON password**. ```{e}```")
+        else:
+            await ctx.send(f"RCON password changed to ||{rcon_password}||")
+
+    @dmc.command(name="commandchannel")
+    @config_check()
+    async def change_commands_channel(self, ctx, channel: discord.TextChannel):
+        config = load_config()
+        config["commands_channel_id"] = channel.id
+        try:
+            write_config(config)
+        except Exception as e:
+            await ctx.send(f"Failed to change **Command channel ID**. ```{e}```")
+        else:
+            await ctx.send(f"Commands channel ID changed to `{commands_channel_id}`")
+
+    @dmc.command(name="info")
+    async def discord_minecraft_info(self, ctx):
+        embed = discord.embed(
+            color=0xb5feff,
+            timestamp=datetime.datetime.utcnow()
+        )
+        embed.set_author(
+            name=f"Discord > Minecraft (v{self.version})",
+            icon_url="https://avatars0.githubusercontent.com/u/71665152?s=200&v=4"
+        )
+        embed.add_field(name="Author", value=self.author, inline=False)
+        embed.add_field(name="Version", value=self.version, inline=False)
+        embed.add_field(name="Github", value=f"[click here]({self.github})", inline=False)
+        await ctx.send(embed=embed)
+
+    @commands.command(name='console',description='Send commands to your minecraft console',aliases=['c'],usage='!console <command> [values]')
     @channel_check()
     @config_check()
     async def minecraft_console(self, ctx, command: str, *, values=None):
         await ctx.message.channel.trigger_typing()
+        config = load_config()
         try:
-            with MCRcon(str(self.config['server_ip']),str(self.config['rcon_password']),int(self.config['rcon_port'])) as mcr:
+            with MCRcon(str(config['server_ip']),str(config['rcon_password']),int(config['rcon_port'])) as mcr:
                 if values != None:
                     returned = mcr.command(f"{command} {values}")
                     returnembed = discord.Embed(
